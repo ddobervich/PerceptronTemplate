@@ -73,10 +73,9 @@ public class DecisionBoundaryVizualizer extends PApplet {
 
     public void draw() {
         background(200);
-        //drawFullField(20);
+        drawFullField(20);
         drawPoints();
         displayNNInfo(nn, 30, 30);
-        //drawMouseInfo();
     }
 
     private void displayNNInfo(Perceptron nn, int x, int y) {
