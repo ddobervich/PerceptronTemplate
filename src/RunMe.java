@@ -1,21 +1,26 @@
+import DataDisplay.DataReader;
+import DataDisplay.DataSet;
+
 public class RunMe {
     public static final String WHAT_TO_CLASSIFY = "virginica";
+    public static final String TRAINING_DATA_FILE = "data/iris.data";
     public static final String[] features = {"sepal length", "sepal width"};
+
     public static void main(String[] args) {
         DataSet dataset;
         Perceptron nn;
 
         String[] headers = {"sepal length", "sepal width", "petal length", "petal width", "class"};
-        dataset = DataReader.createDataSetFromCSV("iris.data", 0, headers);
+        dataset = DataReader.createDataSetFromCSV(TRAINING_DATA_FILE, 0, headers);
 
         int numInputs = features.length;
         nn = new Perceptron(numInputs, WHAT_TO_CLASSIFY);
 
-        runTrainingData(nn, dataset);
-        testPerceptronOnData(nn, dataset);
+        train(nn, dataset);
+        test(nn, dataset);
     }
 
-    private static void testPerceptronOnData(Perceptron nn, DataSet d) {
+    private static void test(Perceptron nn, DataSet d) {
         int numRight = 0;
         for (DataSet.DataPoint p : d.getData()) {
             String correctLabel = p.getLabelString();
@@ -34,7 +39,7 @@ public class RunMe {
         System.out.println("Right: " + numRight + " / " + d.getData().size());
     }
 
-    private static void runTrainingData(Perceptron nn, DataSet d) {
+    private static void train(Perceptron nn, DataSet d) {
         for (int epochs = 0; epochs < 500; epochs++) {
             for (DataSet.DataPoint p : d.getData()) {
                 String correctLabel = p.getLabelString();

@@ -1,5 +1,8 @@
 import java.util.Collections;
 
+import DataDisplay.DataReader;
+import DataDisplay.DataSet;
+import DataDisplay.DataSetViz;
 import processing.core.PApplet;
 
 public class PerceptronVisualizer extends PApplet {

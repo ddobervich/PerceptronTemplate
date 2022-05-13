@@ -1,5 +1,7 @@
+import DataDisplay.DataReader;
+import DataDisplay.DataSet;
+import DataDisplay.Display;
 import processing.core.PApplet;
-import java.util.ArrayList;
 
 public class Main extends PApplet {
     private static final int NO_CATEGORY_COLOR = 0xFFFFFF00;
