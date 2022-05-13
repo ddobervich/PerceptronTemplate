@@ -1,3 +1,5 @@
+package Perceptron;
+
 import java.util.Arrays;
 
 public class Perceptron {

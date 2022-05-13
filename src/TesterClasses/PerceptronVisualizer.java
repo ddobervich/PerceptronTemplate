@@ -1,9 +1,12 @@
+package TesterClasses;
+
 import java.util.Collections;
 
 import DataDisplay.DataReader;
 import DataDisplay.DataSet;
 import DataDisplay.DataSetViz;
 import processing.core.PApplet;
+import Perceptron.Perceptron;
 
 public class PerceptronVisualizer extends PApplet {
 	DataSetViz dataViz;
@@ -126,6 +129,6 @@ public class PerceptronVisualizer extends PApplet {
 	}
 
 	public static void main(String[] args) {
-		PApplet.main("PerceptronVisualizer");
+		PApplet.main("TesterClasses.PerceptronVisualizer");
 	}
 }

@@ -1,9 +1,12 @@
+package TesterClasses;
+
 import DataDisplay.DataReader;
 import DataDisplay.DataSet;
 import DataDisplay.Display;
 import processing.core.PApplet;
+import Perceptron.Perceptron;
 
-public class Main extends PApplet {
+public class DecisionBoundaryVizualizer extends PApplet {
     private static final int NO_CATEGORY_COLOR = 0xFFFFFF00;
     private static final int YES_CATEGORY_COLOR = 0xFFFF00FF;
     private static final int CORRECT_CLASSIFICAITON_COLOR = 0xFF00FF00;
@@ -144,6 +147,6 @@ public class Main extends PApplet {
     }
 
    public static void main(String[] args) {
-        PApplet.main("Main");
+        PApplet.main("TesterClasses.DecisionBoundaryVizualizer");
     }
 }

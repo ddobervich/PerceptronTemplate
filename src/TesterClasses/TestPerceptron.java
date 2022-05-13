@@ -1,7 +1,10 @@
+package TesterClasses;
+
 import DataDisplay.DataReader;
 import DataDisplay.DataSet;
+import Perceptron.Perceptron;
 
-public class RunMe {
+public class TestPerceptron {
     public static final String WHAT_TO_CLASSIFY = "virginica";
     public static final String TRAINING_DATA_FILE = "data/iris.data";
     public static final String[] features = {"sepal length", "sepal width"};
@@ -18,6 +21,17 @@ public class RunMe {
 
         train(nn, dataset);
         test(nn, dataset);
+    }
+
+    private static void train(Perceptron nn, DataSet d) {
+        for (int epochs = 0; epochs < 500; epochs++) {
+            for (DataSet.DataPoint p : d.getData()) {
+                String correctLabel = p.getLabelString();
+                float[] input = p.getData(features);
+
+                nn.train(input, correctLabel);
+            }
+        }
     }
 
     private static void test(Perceptron nn, DataSet d) {
@@ -39,14 +53,5 @@ public class RunMe {
         System.out.println("Right: " + numRight + " / " + d.getData().size());
     }
 
-    private static void train(Perceptron nn, DataSet d) {
-        for (int epochs = 0; epochs < 500; epochs++) {
-            for (DataSet.DataPoint p : d.getData()) {
-                String correctLabel = p.getLabelString();
-                float[] input = p.getData(features);
 
-                nn.train(input, correctLabel);
-            }
-        }
-    }
 }
