@@ -1,3 +1,5 @@
+package DataDisplay;
+
 import processing.core.PApplet;
 
 public class DataSetViz {
