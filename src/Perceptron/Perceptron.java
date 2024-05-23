@@ -1,5 +1,9 @@
 package Perceptron;
 
+import DataDisplay.DataSet;
+import sun.security.krb5.internal.TGSReq;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Perceptron {
@@ -36,47 +40,55 @@ public class Perceptron {
      * @param input input vector
      * @return 0 or 1 representing the possible output categories or -1 if there's an error
      */
-    public int guess(float[] input) {
+    public float guess(float[] input) {
         float sum = 0;
 
         for (int i = 0; i < input.length; i++) {
             sum += input[i]*weights[i];
         }
 
+        sum += THRESHOLD;
+
         return activationFunction(sum);
     }
 
-    private int activationFunction(float sum) {
-        if (sum > THRESHOLD) {
-            return 1;
-        } else {
-            return 0;
-        }
+    private float activationFunction(float sum) {
+        return (float)(1.0/(1+Math.exp(-sum)));
     }
 
     /***
      * Train the perceptron using the input feature vector and its correct label.
      * Return true if there was a non-zero error and training occured (weights got adjusted)
-     *
-     * @param input
-     * @param correctLabel
      * @return
      */
-    public boolean train(float[] input, String correctLabel) {
-        int prediction = guess(input);
+    public boolean train(ArrayList<DataSet.DataPoint> batch, String[] features) {
+        float[] weightUpdates = new float[ features.length ];
+        float thresholdUpdate = 0;
 
-        if (isGuessCorrect(prediction,correctLabel))
-            return false;       // we didn't train
+        for (DataSet.DataPoint point : batch) {
+            float[] input = point.getData(features);
+            String correctLabel = point.getLabelString();
 
-        int error = prediction - getCorrectGuess(correctLabel);
-        for (int i = 0; i < weights.length; i++) {
-            weights[i] = weights[i] - error*input[i]*learningRate;
+            float prediction = guess(input);
+            int correctAnswer = getCorrectGuess(correctLabel);
+            float error = (prediction - correctAnswer);
+
+            for (int i = 0; i < weights.length; i++) {
+                weightUpdates[i] += input[i] * error * learningRate;		// ADD IN ADJUSTMENTS FOR UDPATE
+            }
+
+            thresholdUpdate = thresholdUpdate + error * learningRate;
         }
 
-        THRESHOLD = THRESHOLD + error*learningRate;
+        for (int i = 0; i < weights.length; i++) {					// APPLY THEM!
+            weights[i] -= weightUpdates[i];
+        }
 
-        return true;    // we did train
+        THRESHOLD -= thresholdUpdate;					// APPLY THEM!
+
+        return true;
     }
+
 
     public float[] getWeights() {
         return weights;

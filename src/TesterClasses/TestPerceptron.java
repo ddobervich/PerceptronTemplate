@@ -4,10 +4,13 @@ import DataDisplay.DataReader;
 import DataDisplay.DataSet;
 import Perceptron.Perceptron;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestPerceptron {
-    public static final String WHAT_TO_CLASSIFY = "setosa";
+    public static final String WHAT_TO_CLASSIFY = "versicolor";
     public static final String TRAINING_DATA_FILE = "data/iris.data";
-    public static final String[] features = {"sepal length", "sepal width"};
+    public static final String[] features =  {"petal length", "petal width", "sepal length", "sepal width"};
 
     public static void main(String[] args) {
         DataSet dataset;
@@ -24,14 +27,23 @@ public class TestPerceptron {
     }
 
     private static void train(Perceptron nn, DataSet d) {
-        for (int epochs = 0; epochs < 500; epochs++) {
-            for (DataSet.DataPoint p : d.getData()) {
-                String correctLabel = p.getLabelString();
-                float[] input = p.getData(features);
-
-                nn.train(input, correctLabel);
-            }
+        for (int epochs = 0; epochs < 5000; epochs++) {
+            trainN(nn, d, 100);
         }
+    }
+
+    private static void trainN(Perceptron nn, DataSet d, int num) {
+        ArrayList<DataSet.DataPoint> batch = getRandomData(d.getData(), num);
+        nn.train(batch, features);
+    }
+
+    private static ArrayList<DataSet.DataPoint> getRandomData(List<DataSet.DataPoint> data, int num) {
+        ArrayList<DataSet.DataPoint> batch = new ArrayList<DataSet.DataPoint>();
+        for (int i = 0; i < num; i++) {
+            DataSet.DataPoint p = data.get((int)(Math.random()*data.size()));
+            batch.add(p);
+        }
+        return batch;
     }
 
     private static void test(Perceptron nn, DataSet d) {
@@ -40,7 +52,9 @@ public class TestPerceptron {
             String correctLabel = p.getLabelString();
 
             float[] input = p.getData(features);
-            int guess = nn.guess(input);
+            float prob = nn.guess(input);
+            int guess = 0;
+            if (prob > 0.5) guess = 1;
 
             if (nn.isGuessCorrect(guess, correctLabel)) {
                 numRight++;

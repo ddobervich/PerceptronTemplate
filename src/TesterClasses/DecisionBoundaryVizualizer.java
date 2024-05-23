@@ -6,6 +6,9 @@ import DataDisplay.Display;
 import processing.core.PApplet;
 import Perceptron.Perceptron;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DecisionBoundaryVizualizer extends PApplet {
     private static final int NO_CATEGORY_COLOR = 0xFFFFFF00;
     private static final int YES_CATEGORY_COLOR = 0xFFFF00FF;
@@ -15,7 +18,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
     DataSet d;
     Perceptron nn;
     Display display;
-    static String[] features = {"petal width", "sepal length"};
+    static String[] features = {"petal width", "petal length"};
     int x, y;
 
     int currentIndex = 0;
@@ -47,7 +50,9 @@ public class DecisionBoundaryVizualizer extends PApplet {
             String correctLabel = p.getLabelString();
             float[] input = p.getData(features);
 
-            int guess = nn.guess(input);
+            float prob = nn.guess(input);
+            int guess = 0;
+            if (prob >= 0.5) guess = 1;
 
             if (nn.isGuessCorrect(guess, correctLabel)) {
                 numRight++;
@@ -60,22 +65,12 @@ public class DecisionBoundaryVizualizer extends PApplet {
         System.out.println("Right: " + numRight + " / " + d.getData().size());
     }
 
-    private static void runTrainingData(Perceptron nn, DataSet d) {
-        for (int epochs = 0; epochs < 10; epochs++) {
-            for (DataSet.DataPoint p : d.getData()) {
-                String correctLabel = p.getLabelString();
-
-                float[] input = p.getData(features);
-                nn.train(input, correctLabel);
-            }
-        }
-    }
-
     public void draw() {
         background(200);
         drawFullField(20);
         drawPoints();
         displayNNInfo(nn, 30, 30);
+        mouseReleased();
     }
 
     private void displayNNInfo(Perceptron nn, int x, int y) {
@@ -108,7 +103,9 @@ public class DecisionBoundaryVizualizer extends PApplet {
             weight = 6;
 
             float[] inputs = point.getData(features);
-            int guess = nn.guess(inputs);
+            float prob = nn.guess(inputs);
+            int guess = 0;
+            if (prob >= 0.5) guess = 1;
 
             int color = (nn.isGuessCorrect(guess, label)) ? CORRECT_CLASSIFICAITON_COLOR : INCORRECT_CLASSIFICATION_COLOR;
             int stroke = (label.equals(nn.getTargetLabel())) ? YES_CATEGORY_COLOR : NO_CATEGORY_COLOR;
@@ -122,7 +119,10 @@ public class DecisionBoundaryVizualizer extends PApplet {
                 float dx = display.screenXToData(x);
                 float dy = display.sccreenYToData(y);
 
-                int guess = nn.guess(new float[]{dx, dy});
+                float prob = nn.guess(new float[]{dx, dy});
+                int guess = 0;
+                if (prob >= 0.5) guess = 1;
+
                 int color = (guess == 1) ? YES_CATEGORY_COLOR : NO_CATEGORY_COLOR;
 
                 display.plotDataCoords(this, dx, dy, STEP / 2, color, color, 1);
@@ -131,21 +131,24 @@ public class DecisionBoundaryVizualizer extends PApplet {
     }
 
     public void mouseReleased() {
-        boolean noChange = true;
-        do {
-            DataSet.DataPoint point = d.getData().get(currentIndex);
-            String label = point.getLabelString();
-
-            float[] inputs = {point.getData(x), point.getData(y)};
-            noChange = !nn.train(inputs, point.getLabelString());
-
-            currentIndex++;
-            if (currentIndex >= d.getData().size())
-                currentIndex = 0;
-        } while (noChange);
+        trainN(200);
     }
 
-   public static void main(String[] args) {
+    private void trainN(int num) {
+        ArrayList<DataSet.DataPoint> batch = getRandomData(d.getData(), num);
+        nn.train(batch, features);
+    }
+
+    private ArrayList<DataSet.DataPoint> getRandomData(List<DataSet.DataPoint> data, int num) {
+        ArrayList<DataSet.DataPoint> batch = new ArrayList<DataSet.DataPoint>();
+        for (int i = 0; i < num; i++) {
+            DataSet.DataPoint p = data.get((int)(Math.random()*data.size()));
+            batch.add(p);
+        }
+        return batch;
+    }
+
+    public static void main(String[] args) {
         PApplet.main("TesterClasses.DecisionBoundaryVizualizer");
     }
 }
