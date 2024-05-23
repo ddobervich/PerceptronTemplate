@@ -28,22 +28,8 @@ public class TestPerceptron {
 
     private static void train(Perceptron nn, DataSet d) {
         for (int epochs = 0; epochs < 5000; epochs++) {
-            trainN(nn, d, 100);
+            nn.train(d.getData(), features);
         }
-    }
-
-    private static void trainN(Perceptron nn, DataSet d, int num) {
-        ArrayList<DataSet.DataPoint> batch = getRandomData(d.getData(), num);
-        nn.train(batch, features);
-    }
-
-    private static ArrayList<DataSet.DataPoint> getRandomData(List<DataSet.DataPoint> data, int num) {
-        ArrayList<DataSet.DataPoint> batch = new ArrayList<DataSet.DataPoint>();
-        for (int i = 0; i < num; i++) {
-            DataSet.DataPoint p = data.get((int)(Math.random()*data.size()));
-            batch.add(p);
-        }
-        return batch;
     }
 
     private static void test(Perceptron nn, DataSet d) {
@@ -52,9 +38,7 @@ public class TestPerceptron {
             String correctLabel = p.getLabelString();
 
             float[] input = p.getData(features);
-            float prob = nn.guess(input);
-            int guess = 0;
-            if (prob > 0.5) guess = 1;
+            int guess = Math.round(nn.guess(input));
 
             if (nn.isGuessCorrect(guess, correctLabel)) {
                 numRight++;

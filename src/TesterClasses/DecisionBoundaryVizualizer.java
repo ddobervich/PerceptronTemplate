@@ -50,9 +50,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
             String correctLabel = p.getLabelString();
             float[] input = p.getData(features);
 
-            float prob = nn.guess(input);
-            int guess = 0;
-            if (prob >= 0.5) guess = 1;
+            int guess = Math.round(nn.guess(input));
 
             if (nn.isGuessCorrect(guess, correctLabel)) {
                 numRight++;
@@ -103,9 +101,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
             weight = 6;
 
             float[] inputs = point.getData(features);
-            float prob = nn.guess(inputs);
-            int guess = 0;
-            if (prob >= 0.5) guess = 1;
+            int guess = Math.round(nn.guess(inputs));
 
             int color = (nn.isGuessCorrect(guess, label)) ? CORRECT_CLASSIFICAITON_COLOR : INCORRECT_CLASSIFICATION_COLOR;
             int stroke = (label.equals(nn.getTargetLabel())) ? YES_CATEGORY_COLOR : NO_CATEGORY_COLOR;
@@ -119,9 +115,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
                 float dx = display.screenXToData(x);
                 float dy = display.sccreenYToData(y);
 
-                float prob = nn.guess(new float[]{dx, dy});
-                int guess = 0;
-                if (prob >= 0.5) guess = 1;
+                int guess = Math.round(nn.guess(new float[]{dx, dy}));
 
                 int color = (guess == 1) ? YES_CATEGORY_COLOR : NO_CATEGORY_COLOR;
 

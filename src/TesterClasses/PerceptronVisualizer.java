@@ -48,9 +48,7 @@ public class PerceptronVisualizer extends PApplet {
 			DataSet.DataPoint p = data.getData().get(i);
 			float[] input = {p.getData(0), p.getData(1)};
 			
-			float prob = nn.guess(input);
-			int guess = 0;
-			if (prob >= 0.5) guess = 1;
+			int guess = Math.round(nn.guess(input));
 
 			int color = (nn.isGuessCorrect(guess, p.getLabelString())) ? color(0, 255, 0) : color(255, 0, 0);
 
@@ -96,9 +94,7 @@ public class PerceptronVisualizer extends PApplet {
 		fill(0);
 		text(displayString, centerX - 130, centerY);
 
-		float prob = nn.guess(new float[] { current.getData(0), current.getData(1) });
-		int guess = 0;
-		if (prob >= 0.5) guess = 1;
+		int guess = Math.round( nn.guess(new float[] { current.getData(0), current.getData(1) }) );
 
 		textSize(40);
 		int color = (nn.isGuessCorrect(guess, current.getLabelString())) ? color(0, 255, 0) : color(255, 0, 0);
@@ -131,9 +127,7 @@ public class PerceptronVisualizer extends PApplet {
 		
 		if (key == 't') {
 			float[] input = {current.getData(0), current.getData(1)};
-			ArrayList<DataSet.DataPoint> batchOfOne = new ArrayList<>();
-			batchOfOne.add(current);
-			nn.train(batchOfOne, features);
+			nn.train(input, current.getLabelString());
 		}
 	}
 

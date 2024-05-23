@@ -5,6 +5,7 @@ import sun.security.krb5.internal.TGSReq;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Perceptron {
     private int numInputs;
@@ -61,7 +62,7 @@ public class Perceptron {
      * Return true if there was a non-zero error and training occured (weights got adjusted)
      * @return
      */
-    public boolean train(ArrayList<DataSet.DataPoint> batch, String[] features) {
+    public boolean train(List<DataSet.DataPoint> batch, String[] features) {
         float[] weightUpdates = new float[ features.length ];
         float thresholdUpdate = 0;
 
@@ -89,6 +90,29 @@ public class Perceptron {
         return true;
     }
 
+    /***
+     * Train the perceptron using the input feature vector and its correct label.
+     * Return true if there was a non-zero error and training occured (weights got adjusted)
+     *
+     * @param input
+     * @param correctLabel
+     * @return
+     */
+    public boolean train(float[] input, String correctLabel) {
+        int prediction = Math.round(guess(input));
+
+        if (isGuessCorrect(prediction,correctLabel))
+            return false;       // we didn't train
+
+        int error = prediction - getCorrectGuess(correctLabel);
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] = weights[i] - error*input[i]*learningRate;
+        }
+
+        THRESHOLD = THRESHOLD - error*learningRate;
+
+        return true;    // we did train
+    }
 
     public float[] getWeights() {
         return weights;
