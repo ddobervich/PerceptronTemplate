@@ -5,7 +5,7 @@ import DataDisplay.DataSet;
 import Perceptron.Perceptron;
 
 public class TestPerceptron {
-    public static final String WHAT_TO_CLASSIFY = "virginica";
+    public static final String WHAT_TO_CLASSIFY = "setosa";
     public static final String TRAINING_DATA_FILE = "data/iris.data";
     public static final String[] features = {"sepal length", "sepal width"};
 
