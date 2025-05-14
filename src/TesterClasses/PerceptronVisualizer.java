@@ -56,7 +56,7 @@ public class PerceptronVisualizer extends PApplet {
 
 	private void drawPerceptron() {
 		if (nn.getWeights() == null) {
-			System.err.println("Cannot draw perceptrion: getWeights() method must return float[][]");
+			System.err.println("Cannot draw perceptrion: getWeights() method must return float[]");
 			return;
 		}
 
