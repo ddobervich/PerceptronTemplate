@@ -12,10 +12,12 @@ public class DecisionBoundaryVizualizer extends PApplet {
     private static final int CORRECT_CLASSIFICAITON_COLOR = 0xFF00FF00;
     private static final int INCORRECT_CLASSIFICATION_COLOR = 0xFFFF0000;
 
-    DataSet d;
-    Perceptron nn;
+    DataSet data;
+    Perceptron perceptron;
     Display display;
-    static String[] features = {"petal width", "sepal length"};
+
+    // Possible features: "sepal length", "sepal width", "petal length", "petal width"
+    static String[] features = {"petal width", "sepal length"};     // <-- you can change this
     int x, y;
 
     int currentIndex = 0;
@@ -25,20 +27,20 @@ public class DecisionBoundaryVizualizer extends PApplet {
     }
 
     public void setup() {
-        String[] headers = {"sepal length", "sepal width", "petal length", "petal width", "class"};
-        d = DataReader.createDataSetFromCSV("data/iris.data", 0, headers);
+        perceptron = new Perceptron(2, "setosa");   // --=== [ you can change this ] ===--
 
-        nn = new Perceptron(2, "setosa");
+        String[] headers = {"sepal length", "sepal width", "petal length", "petal width", "class"};
+        data = DataReader.createDataSetFromCSV("data/iris.data", 0, headers);
 
         x = DataSet.getIndexForFeatureName(features[0]);
         y = DataSet.getIndexForFeatureName(features[1]);
 
-        d.info();
+        data.info();
 
         display = new Display(0, 0,
-                width, height, d.getMinVal(x),
-                d.getMinVal(y), d.getMaxVal(x),
-                d.getMaxVal(y), 2f);
+                width, height, data.getMinVal(x),
+                data.getMinVal(y), data.getMaxVal(x),
+                data.getMaxVal(y), 2f);
     }
 
     private static void testPerceptronOnData(Perceptron nn, DataSet d) {
@@ -75,7 +77,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
         background(200);
         drawFullField(20);
         drawPoints();
-        displayNNInfo(nn, 30, 30);
+        displayNNInfo(perceptron, 30, 30);
     }
 
     private void displayNNInfo(Perceptron nn, int x, int y) {
@@ -101,17 +103,17 @@ public class DecisionBoundaryVizualizer extends PApplet {
     }
 
     public void drawPoints() {
-        for (DataSet.DataPoint point : d.getData()) {
+        for (DataSet.DataPoint point : data.getData()) {
             String label = point.getLabelString();
 
             int weight = 0;
             weight = 6;
 
             float[] inputs = point.getData(features);
-            int guess = nn.guess(inputs);
+            int guess = perceptron.guess(inputs);
 
-            int color = (nn.isGuessCorrect(guess, label)) ? CORRECT_CLASSIFICAITON_COLOR : INCORRECT_CLASSIFICATION_COLOR;
-            int stroke = (label.equals(nn.getTargetLabel())) ? YES_CATEGORY_COLOR : NO_CATEGORY_COLOR;
+            int color = (perceptron.isGuessCorrect(guess, label)) ? CORRECT_CLASSIFICAITON_COLOR : INCORRECT_CLASSIFICATION_COLOR;
+            int stroke = (label.equals(perceptron.getTargetLabel())) ? YES_CATEGORY_COLOR : NO_CATEGORY_COLOR;
             display.plotDataCoords(this, point.getData(x), point.getData(y), 16, stroke, color, weight);
         }
     }
@@ -122,7 +124,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
                 float dx = display.screenXToData(x);
                 float dy = display.sccreenYToData(y);
 
-                int guess = nn.guess(new float[]{dx, dy});
+                int guess = perceptron.guess(new float[]{dx, dy});
                 int color = (guess == 1) ? YES_CATEGORY_COLOR : NO_CATEGORY_COLOR;
 
                 display.plotDataCoords(this, dx, dy, STEP / 2, color, color, 1);
@@ -133,14 +135,14 @@ public class DecisionBoundaryVizualizer extends PApplet {
     public void mouseReleased() {
         boolean noChange = true;
         do {
-            DataSet.DataPoint point = d.getData().get(currentIndex);
+            DataSet.DataPoint point = data.getData().get(currentIndex);
             String label = point.getLabelString();
 
             float[] inputs = {point.getData(x), point.getData(y)};
-            noChange = !nn.train(inputs, point.getLabelString());
+            noChange = !perceptron.train(inputs, point.getLabelString());
 
             currentIndex++;
-            if (currentIndex >= d.getData().size())
+            if (currentIndex >= data.getData().size())
                 currentIndex = 0;
         } while (noChange);
     }

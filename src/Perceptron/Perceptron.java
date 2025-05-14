@@ -1,17 +1,15 @@
 package Perceptron;
 
-import java.util.Arrays;
-
 public class Perceptron {
     private int numInputs;
     private float[] weights;
     private float THRESHOLD = 0;
 
-    private String classifyForLabel; // this is a classifier for eg "virginica"
+    private String labelToPredict;          // for example: this is a classifier for "virginica"
     private float learningRate = 0.005f;
 
     public Perceptron(int numInputs, String whatToClassify) {
-        this.classifyForLabel = whatToClassify;
+        this.labelToPredict = whatToClassify;
         this.numInputs = numInputs;
         weights = initWeights(numInputs);
     }
@@ -71,7 +69,7 @@ public class Perceptron {
     }
 
     public String getTargetLabel() {
-        return this.classifyForLabel;
+        return this.labelToPredict;
     }
 
     public boolean isGuessCorrect(int guess, String correctLabel) {
@@ -85,7 +83,7 @@ public class Perceptron {
      * @return
      */
     public int getCorrectGuess(String label) {
-        if (label.equals(this.classifyForLabel))
+        if (label.equals(this.labelToPredict))
             return 1;
         else
             return 0;
