@@ -7,20 +7,21 @@ import Perceptron.Perceptron;
 public class TestPerceptron {
     public static final String WHAT_TO_CLASSIFY = "virginica";
     public static final String TRAINING_DATA_FILE = "data/iris.data";
-    public static final String[] features = {"sepal length", "sepal width"};
+    // all options:  "sepal length", "sepal width", "petal length", "petal width"
+    public static final String[] features = {"sepal length", "sepal width"};    // <--- u change it!
 
     public static void main(String[] args) {
         DataSet dataset;
-        Perceptron nn;
+        Perceptron perceptron;
 
         String[] headers = {"sepal length", "sepal width", "petal length", "petal width", "class"};
         dataset = DataReader.createDataSetFromCSV(TRAINING_DATA_FILE, 0, headers);
 
         int numInputs = features.length;
-        nn = new Perceptron(numInputs, WHAT_TO_CLASSIFY);
+        perceptron = new Perceptron(numInputs, WHAT_TO_CLASSIFY);
 
-        train(nn, dataset);
-        test(nn, dataset);
+        train(perceptron, dataset);
+        test(perceptron, dataset);
     }
 
     private static void train(Perceptron nn, DataSet d) {
