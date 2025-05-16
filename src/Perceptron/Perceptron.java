@@ -25,14 +25,15 @@ public class Perceptron {
     }
 
     /***
-     * Run the perceptron on the input and return 0 or 1 for the output category
-     * @param input input vector
+     * Run the perceptron on the featureVector and return 0 or 1 for the output category
+     * @param featureVector featureVector vector
      * @return 0 or 1 representing the possible output categories or -1 if there's an error
      */
-    public int guess(float[] input) {
+    public int guess(float[] featureVector) {
         // TODO:  Implement this.
-        // Do a linear combination of the inputs multiplied by the weights.
+        // Compute a linear combination of the inputs multiplied by the weights.
         // Run the sum through the activiationFunction and return the result
+
         return -1;
     }
 
@@ -45,17 +46,17 @@ public class Perceptron {
     }
 
     /***
-     * Train the perceptron using the input feature vector and its correct label.
-     * Return true if there was a non-zero error and training occured (weights got adjusted)
+     * Train the perceptron using the featureVector feature vector and its correct label.
+     * Return true if the weights got adjusted (if the prediction was wrong).
      *
-     * @param input
+     * @param featureVector
      * @param correctLabel
      * @return
      */
-    public boolean train(float[] input, String correctLabel) {
+    public boolean train(float[] featureVector, String correctLabel) {
         // TODO:  Implement this.
 
-        // run the perceptron on the input
+        // run the perceptron on the featureVector
         // compare the guess with the correct label (can use already-made helper method for this).
 
         // If guess was incorrect
