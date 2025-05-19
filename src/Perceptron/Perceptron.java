@@ -20,8 +20,11 @@ public class Perceptron {
      * @return the initialized weights array
      */
     private float[] initWeights(int numInputs) {
-        // TODO:  initialize the weights
-        return null;
+        float[] weights = new float[numInputs];
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] = (float)(Math.random()*2-1);
+        }
+        return weights;
     }
 
     /***
@@ -30,11 +33,13 @@ public class Perceptron {
      * @return 0 or 1 representing the possible output categories or -1 if there's an error
      */
     public int guess(float[] featureVector) {
-        // TODO:  Implement this.
-        // Compute a linear combination of the inputs multiplied by the weights.
-        // Run the sum through the activiationFunction and return the result
+        float sum = 0;
 
-        return -1;
+        for (int i = 0; i < featureVector.length; i++) {
+            sum += weights[i]*featureVector[i];
+        }
+
+        return activationFunction(sum);
     }
 
     private int activationFunction(float sum) {
@@ -54,15 +59,17 @@ public class Perceptron {
      * @return
      */
     public boolean train(float[] featureVector, String correctLabel) {
-        // TODO:  Implement this.
+        int error = guess(featureVector) - getCorrectGuess(correctLabel);
 
-        // run the perceptron on the featureVector
-        // compare the guess with the correct label (can use already-made helper method for this).
+        if (error == 0) return false;   // no training
 
-        // If guess was incorrect
-        //    update weights and THRESHOLD using learning rule
+        for (int i = 0; i < this.weights.length; i++) {
+            weights[i] = weights[i] - error*featureVector[i]*learningRate;
+        }
 
-        return false;
+        THRESHOLD = THRESHOLD + error*learningRate;
+
+        return true;
     }
 
     public float[] getWeights() {
