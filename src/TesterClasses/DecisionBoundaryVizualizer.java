@@ -6,6 +6,8 @@ import DataDisplay.Display;
 import processing.core.PApplet;
 import Perceptron.Perceptron;
 
+import java.util.Collections;
+
 public class DecisionBoundaryVizualizer extends PApplet {
     private static final int NO_CATEGORY_COLOR = 0xFFFFFF00;
     private static final int YES_CATEGORY_COLOR = 0xFFFF00FF;
@@ -78,6 +80,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
         drawFullField(20);
         drawPoints();
         displayNNInfo(perceptron, 30, 30);
+        // train(10);   <-- uncomment to train on 10 items every frame
     }
 
     private void displayNNInfo(Perceptron nn, int x, int y) {
@@ -132,19 +135,19 @@ public class DecisionBoundaryVizualizer extends PApplet {
         }
     }
 
-    public void mouseReleased() {
-        boolean noChange = true;
-        do {
-            DataSet.DataPoint point = data.getData().get(currentIndex);
+    public void train(int numItems) {
+        Collections.shuffle(data.getData());
+        for (int i = 0; i < numItems; i++) {
+            DataSet.DataPoint point = data.getData().get(i);
             String label = point.getLabelString();
 
             float[] inputs = {point.getData(x), point.getData(y)};
-            noChange = !perceptron.train(inputs, point.getLabelString());
+            perceptron.train(inputs, point.getLabelString());
+        }
+    }
 
-            currentIndex++;
-            if (currentIndex >= data.getData().size())
-                currentIndex = 0;
-        } while (noChange);
+    public void mouseReleased() {
+        train(data.getData().size());
     }
 
    public static void main(String[] args) {
