@@ -29,7 +29,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
     }
 
     public void setup() {
-        perceptron = new Perceptron(2, "setosa");   // --=== [ you can change this ] ===--
+        perceptron = new Perceptron(2, "versicolor");   // --=== [ you can change this ] ===--
 
         String[] headers = {"sepal length", "sepal width", "petal length", "petal width", "class"};
         data = DataReader.createDataSetFromCSV("data/iris.data", 0, headers);
@@ -80,7 +80,7 @@ public class DecisionBoundaryVizualizer extends PApplet {
         drawFullField(20);
         drawPoints();
         displayNNInfo(perceptron, 30, 30);
-        // train(10);   <-- uncomment to train on 10 items every frame
+        train(30);  // <-- uncomment to train on 10 items every frame
     }
 
     private void displayNNInfo(Perceptron nn, int x, int y) {

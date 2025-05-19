@@ -6,7 +6,7 @@ public class Perceptron {
     private float THRESHOLD = 0;
 
     private String labelToPredict;          // for example: this is a classifier for "virginica"
-    private float learningRate = 0.005f;
+    private float learningRate = 0.001f;
 
     public Perceptron(int numInputs, String whatToClassify) {
         this.labelToPredict = whatToClassify;
@@ -20,7 +20,7 @@ public class Perceptron {
      * @return the initialized weights array
      */
     private float[] initWeights(int numInputs) {
-        float[] weights = new float[numInputs];
+        float[] weights = new float[numInputs+1];
         for (int i = 0; i < weights.length; i++) {
             weights[i] = (float)(Math.random()*2-1);
         }
@@ -38,6 +38,8 @@ public class Perceptron {
         for (int i = 0; i < featureVector.length; i++) {
             sum += weights[i]*featureVector[i];
         }
+
+        sum += weights[weights.length-1]*(featureVector[0]*featureVector[0]);
 
         return activationFunction(sum);
     }
@@ -63,9 +65,11 @@ public class Perceptron {
 
         if (error == 0) return false;   // no training
 
-        for (int i = 0; i < this.weights.length; i++) {
+        for (int i = 0; i < featureVector.length; i++) {
             weights[i] = weights[i] - error*featureVector[i]*learningRate;
         }
+
+        weights[weights.length-1] -= error*(featureVector[0]*featureVector[0])*learningRate;
 
         THRESHOLD = THRESHOLD + error*learningRate;
 
